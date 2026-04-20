@@ -58,7 +58,7 @@ export function Navbar() {
                 "px-4 h-14 flex items-center text-xs font-bold uppercase tracking-widest transition-colors",
                 pathname === link.href
                   ? "bg-primary text-primary-foreground"
-                  : "text-foreground/40 hover:text-primary-foreground"
+                  : "text-background/50 hover:text-primary-foreground"
               )}
             >
               {link.label}
@@ -71,7 +71,7 @@ export function Navbar() {
                 "px-4 h-14 flex items-center text-xs font-bold uppercase tracking-widest transition-colors",
                 pathname === "/asistencia"
                   ? "bg-primary text-primary-foreground"
-                  : "text-foreground/40 hover:text-primary-foreground"
+                  : "text-background/50 hover:text-primary-foreground"
               )}
             >
               Asistencia
@@ -145,20 +145,20 @@ export function Navbar() {
           {/* Mobile menu */}
           <div className="md:hidden">
             <Sheet>
-              <SheetTrigger className="inline-flex items-center justify-center h-9 w-9 text-foreground/40 hover:text-primary-foreground transition-colors">
+              <SheetTrigger className="inline-flex items-center justify-center h-9 w-9 text-background/50 hover:text-primary-foreground transition-colors">
                 <Menu className="h-5 w-5" />
               </SheetTrigger>
-              <SheetContent side="right" className="w-64 bg-foreground border-l border-white/10 p-0">
+              <SheetContent side="right" className="w-64 bg-foreground border-l border-background/15 p-0">
                 <div className="flex flex-col mt-14">
                   {publicLinks.map((link) => (
                     <Link
                       key={link.href}
                       href={link.href}
                       className={cn(
-                        "px-6 py-4 text-xs font-bold uppercase tracking-widest border-b border-white/10 transition-colors",
+                        "px-6 py-4 text-xs font-bold uppercase tracking-widest border-b border-background/15 transition-colors",
                         pathname === link.href
                           ? "bg-primary text-primary-foreground"
-                          : "text-foreground/50 hover:text-primary-foreground hover:bg-white/5"
+                          : "text-background/55 hover:text-primary-foreground hover:bg-background/8"
                       )}
                     >
                       {link.label}
@@ -167,7 +167,7 @@ export function Navbar() {
                   {hasRole(role, "JUGADOR") && (
                     <Link
                       href="/asistencia"
-                      className="px-6 py-4 text-xs font-bold uppercase tracking-widest border-b border-white/10 text-foreground/50 hover:text-primary-foreground hover:bg-white/5 transition-colors"
+                      className="px-6 py-4 text-xs font-bold uppercase tracking-widest border-b border-background/15 text-background/55 hover:text-primary-foreground hover:bg-background/8 transition-colors"
                     >
                       Asistencia
                     </Link>
@@ -175,7 +175,7 @@ export function Navbar() {
                   {hasRole(role, "ADMINISTRADOR") && (
                     <Link
                       href="/admin"
-                      className="px-6 py-4 text-xs font-bold uppercase tracking-widest border-b border-white/10 text-primary hover:text-primary-foreground hover:bg-white/5 transition-colors"
+                      className="px-6 py-4 text-xs font-bold uppercase tracking-widest border-b border-background/15 text-primary hover:text-primary-foreground hover:bg-background/8 transition-colors"
                     >
                       Panel Admin
                     </Link>

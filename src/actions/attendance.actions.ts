@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { hasRole } from "@/types/enums";
 
-export async function confirmAttendance(eventId: string, confirmed: boolean) {
+export async function confirmAttendance(eventId: string, confirmed: boolean, note?: string) {
   const session = await auth();
   if (!session?.user?.id) throw new Error("Debes iniciar sesión");
 
@@ -16,8 +16,8 @@ export async function confirmAttendance(eventId: string, confirmed: boolean) {
 
   await prisma.eventAttendance.upsert({
     where: { eventId_playerId: { eventId, playerId: player.id } },
-    create: { eventId, playerId: player.id, confirmed },
-    update: { confirmed },
+    create: { eventId, playerId: player.id, confirmed, note: note ?? null },
+    update: { confirmed, ...(note !== undefined && { note }) },
   });
 
   revalidatePath("/asistencia");
