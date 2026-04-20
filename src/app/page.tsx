@@ -3,10 +3,8 @@ import { getPublicUpcomingEvents } from "@/actions/event.actions";
 import { getTeamStats } from "@/actions/stats.actions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/lib/button-variants";
 import { Calendar, Users, BarChart3 } from "lucide-react";
 import { EVENT_TYPE_LABELS } from "@/types/enums";
-import { cn } from "@/lib/utils";
 
 export default async function HomePage() {
   const [events, statsFirst] = await Promise.all([
@@ -16,48 +14,59 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-green-800 to-green-600 text-white py-20 px-4">
-        <div className="container mx-auto text-center">
-          <div className="text-6xl mb-4">⚽</div>
-          <h1 className="text-4xl font-bold mb-3">Las Palmas FC</h1>
-          <p className="text-green-100 text-lg mb-8 max-w-xl mx-auto">
-            Club de fútbol amateur. Gestión de partidos, jugadores y estadísticas del equipo.
-          </p>
-          <div className="flex gap-3 justify-center flex-wrap">
-            <Link
-              href="/calendario"
-              className={cn(buttonVariants({ size: "lg" }), "bg-white text-green-800 hover:bg-green-50")}
-            >
-              Ver Calendario
-            </Link>
-            <Link
-              href="/equipo"
-              className={cn(buttonVariants({ size: "lg", variant: "outline" }), "border-white text-white hover:bg-green-700")}
-            >
-              Ver Equipo
-            </Link>
+      {/* Hero — flat Bauhaus color block */}
+      <section className="bg-primary text-primary-foreground py-20 px-4">
+        <div className="container mx-auto">
+          <div className="max-w-2xl">
+            <p className="text-xs font-bold uppercase tracking-[0.35em] mb-6 opacity-60">
+              Club de Fútbol Amateur
+            </p>
+            <h1 className="text-6xl font-bold mb-5 leading-none tracking-tight uppercase">
+              Las Palmas FC
+            </h1>
+            <p className="text-base mb-10 opacity-75 max-w-md leading-relaxed">
+              Gestión de partidos, jugadores y estadísticas del equipo.
+            </p>
+            <div className="flex gap-3 flex-wrap">
+              <Link
+                href="/calendario"
+                className="px-6 py-3 text-xs font-bold uppercase tracking-widest bg-primary-foreground text-primary hover:bg-primary-foreground/90 transition-colors"
+              >
+                Ver Calendario
+              </Link>
+              <Link
+                href="/equipo"
+                className="px-6 py-3 text-xs font-bold uppercase tracking-widest border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10 transition-colors"
+              >
+                Ver Equipo
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      <div className="container mx-auto px-4 py-12 space-y-12">
+      <div className="container mx-auto px-4 py-14 space-y-14">
         {/* Quick stats */}
         <section>
-          <h2 className="text-2xl font-bold mb-6">Primera División — Temporada 2025/26</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-muted-foreground mb-6">
+            Primera División — Temporada 2025/26
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-0 border-2 border-border">
             {[
               { label: "Partidos", value: statsFirst.played },
               { label: "Victorias", value: statsFirst.wins },
               { label: "Empates", value: statsFirst.draws },
               { label: "Derrotas", value: statsFirst.losses },
-            ].map((s) => (
-              <Card key={s.label}>
-                <CardContent className="pt-4 text-center">
-                  <div className="text-3xl font-bold">{s.value}</div>
-                  <div className="text-xs text-gray-500 mt-1">{s.label}</div>
-                </CardContent>
-              </Card>
+            ].map((s, i) => (
+              <div
+                key={s.label}
+                className={`p-6 text-center ${i < 3 ? "border-r-2 border-border" : ""} ${i >= 2 ? "border-t-2 md:border-t-0 border-border" : ""}`}
+              >
+                <div className="text-4xl font-bold text-primary">{s.value}</div>
+                <div className="text-xs font-bold uppercase tracking-widest text-muted-foreground mt-2">
+                  {s.label}
+                </div>
+              </div>
             ))}
           </div>
         </section>
@@ -65,93 +74,98 @@ export default async function HomePage() {
         {/* Upcoming events */}
         <section>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">Próximos Eventos</h2>
-            <Link href="/calendario" className={buttonVariants({ variant: "outline", size: "sm" })}>
-              Ver todos
+            <h2 className="text-xl font-bold uppercase tracking-tight">Próximos Eventos</h2>
+            <Link
+              href="/calendario"
+              className="text-xs font-bold uppercase tracking-widest text-primary hover:text-primary/80 transition-colors"
+            >
+              Ver todos →
             </Link>
           </div>
           {events.length === 0 ? (
-            <Card>
-              <CardContent className="py-10 text-center text-gray-500">
-                No hay eventos programados próximamente.
-              </CardContent>
-            </Card>
+            <div className="border-2 border-border p-10 text-center text-muted-foreground text-sm">
+              No hay eventos programados próximamente.
+            </div>
           ) : (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {events.slice(0, 6).map((ev: (typeof events)[number]) => (
-                <Card key={ev.id} className="hover:shadow-md transition-shadow">
-                  <CardHeader className="pb-2">
-                    <div className="flex items-start justify-between gap-2">
-                      <CardTitle className="text-base">{ev.title}</CardTitle>
-                      <Badge
-                        variant={ev.type === "PARTIDO" ? "default" : "secondary"}
-                        className={ev.type === "PARTIDO" ? "bg-green-700" : ""}
-                      >
-                        {EVENT_TYPE_LABELS[ev.type as keyof typeof EVENT_TYPE_LABELS] ?? ev.type}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="text-sm text-gray-600 space-y-1">
-                    <p>
-                      📅{" "}
+            <div className="grid gap-0 md:grid-cols-2 lg:grid-cols-3 border-2 border-border">
+              {events.slice(0, 6).map((ev: (typeof events)[number], i) => (
+                <div
+                  key={ev.id}
+                  className="p-5 border-b-2 border-r-0 md:border-r-2 border-border last:border-b-0 hover:bg-accent transition-colors"
+                >
+                  <div className="flex items-start justify-between gap-2 mb-3">
+                    <h3 className="font-bold text-sm leading-tight">{ev.title}</h3>
+                    <Badge
+                      variant={ev.type === "PARTIDO" ? "default" : "secondary"}
+                      className="text-xs font-bold uppercase tracking-wide shrink-0"
+                    >
+                      {EVENT_TYPE_LABELS[ev.type as keyof typeof EVENT_TYPE_LABELS] ?? ev.type}
+                    </Badge>
+                  </div>
+                  <div className="text-xs text-muted-foreground space-y-1">
+                    <p className="font-medium">
                       {new Date(ev.date).toLocaleDateString("es-ES", {
                         weekday: "long",
                         day: "numeric",
                         month: "long",
                       })}
-                    </p>
-                    <p>
-                      🕐{" "}
+                      {" · "}
                       {new Date(ev.date).toLocaleTimeString("es-ES", {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}
                     </p>
-                    {ev.location && <p>📍 {ev.location}</p>}
+                    {ev.location && <p>{ev.location}</p>}
                     {ev.match && (
-                      <p className="font-medium text-gray-800">
+                      <p className="font-bold text-foreground uppercase tracking-wide">
                         vs {ev.match.opponentName} — {ev.match.isHome ? "Local" : "Visitante"}
                       </p>
                     )}
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               ))}
             </div>
           )}
         </section>
 
-        {/* Nav cards */}
+        {/* Quick access */}
         <section>
-          <h2 className="text-2xl font-bold mb-6">Accesos rápidos</h2>
-          <div className="grid md:grid-cols-3 gap-6">
+          <h2 className="text-xl font-bold uppercase tracking-tight mb-6">Accesos Rápidos</h2>
+          <div className="grid md:grid-cols-3 gap-0 border-2 border-border">
             {[
               {
                 href: "/equipo",
-                icon: <Users className="h-10 w-10 text-green-600 mx-auto" />,
+                icon: <Users className="h-8 w-8" />,
                 title: "Nómina del Equipo",
                 desc: "Jugadores de Primera, Segunda y Senior",
               },
               {
                 href: "/calendario",
-                icon: <Calendar className="h-10 w-10 text-green-600 mx-auto" />,
+                icon: <Calendar className="h-8 w-8" />,
                 title: "Calendario",
                 desc: "Partidos, entrenamientos y reuniones",
               },
               {
                 href: "/estadisticas",
-                icon: <BarChart3 className="h-10 w-10 text-green-600 mx-auto" />,
+                icon: <BarChart3 className="h-8 w-8" />,
                 title: "Estadísticas",
                 desc: "Rendimiento del equipo y jugadores",
               },
-            ].map((item) => (
-              <Link key={item.href} href={item.href}>
-                <Card className="hover:shadow-lg transition-shadow cursor-pointer border-2 hover:border-green-300">
-                  <CardContent className="pt-6 text-center space-y-3">
-                    {item.icon}
-                    <h3 className="font-semibold text-lg">{item.title}</h3>
-                    <p className="text-sm text-gray-500">{item.desc}</p>
-                  </CardContent>
-                </Card>
+            ].map((item, i) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`p-8 flex flex-col gap-4 hover:bg-primary hover:text-primary-foreground transition-colors group ${i < 2 ? "border-b-2 md:border-b-0 md:border-r-2 border-border" : ""}`}
+              >
+                <div className="text-primary group-hover:text-primary-foreground transition-colors">
+                  {item.icon}
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm uppercase tracking-wide mb-1">{item.title}</h3>
+                  <p className="text-xs text-muted-foreground group-hover:text-primary-foreground/70 transition-colors">
+                    {item.desc}
+                  </p>
+                </div>
               </Link>
             ))}
           </div>

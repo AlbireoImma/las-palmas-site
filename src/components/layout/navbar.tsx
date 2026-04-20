@@ -5,7 +5,6 @@ import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { logout } from "@/actions/auth.actions";
 import { hasRole, ROLE_LABELS } from "@/types/enums";
-import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
@@ -39,45 +38,67 @@ export function Navbar() {
     : "?";
 
   return (
-    <nav className="border-b bg-white sticky top-0 z-50">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+    <nav className="bg-foreground sticky top-0 z-50">
+      <div className="container mx-auto px-4 h-14 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="font-bold text-xl text-green-700">
-          ⚽ Las Palmas FC
+        <Link
+          href="/"
+          className="font-bold text-sm tracking-[0.18em] uppercase text-primary-foreground"
+        >
+          Las Palmas FC
         </Link>
 
         {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center">
           {publicLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm font-medium transition-colors hover:text-green-700 ${
-                pathname === link.href ? "text-green-700" : "text-gray-600"
-              }`}
+              className={cn(
+                "px-4 h-14 flex items-center text-xs font-bold uppercase tracking-widest transition-colors",
+                pathname === link.href
+                  ? "bg-primary text-primary-foreground"
+                  : "text-foreground/40 hover:text-primary-foreground"
+              )}
             >
               {link.label}
             </Link>
           ))}
           {hasRole(role, "JUGADOR") && (
-            <Link href="/asistencia" className="text-sm font-medium text-gray-600 hover:text-green-700">
+            <Link
+              href="/asistencia"
+              className={cn(
+                "px-4 h-14 flex items-center text-xs font-bold uppercase tracking-widest transition-colors",
+                pathname === "/asistencia"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-foreground/40 hover:text-primary-foreground"
+              )}
+            >
               Asistencia
             </Link>
           )}
           {hasRole(role, "ADMINISTRADOR") && (
-            <Link href="/admin" className="text-sm font-medium text-green-700 font-semibold hover:text-green-800">
+            <Link
+              href="/admin"
+              className={cn(
+                "px-4 h-14 flex items-center text-xs font-bold uppercase tracking-widest transition-colors",
+                pathname.startsWith("/admin")
+                  ? "bg-primary text-primary-foreground"
+                  : "text-primary hover:text-primary-foreground"
+              )}
+            >
               Admin
             </Link>
           )}
         </div>
 
         {/* User menu */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {user ? (
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-2 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500">
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback className="bg-green-100 text-green-800 text-xs font-semibold">
+              <DropdownMenuTrigger className="flex items-center gap-2 focus:outline-none">
+                <Avatar className="h-7 w-7">
+                  <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
                     {initials}
                   </AvatarFallback>
                 </Avatar>
@@ -85,9 +106,9 @@ export function Navbar() {
               <DropdownMenuContent align="end" className="w-52">
                 <DropdownMenuLabel>
                   <div className="flex flex-col gap-1">
-                    <span className="font-semibold text-sm">{user.name}</span>
-                    <span className="text-xs text-gray-500">{user.email}</span>
-                    <Badge variant="secondary" className="w-fit text-xs mt-1">
+                    <span className="font-bold text-sm uppercase tracking-wide">{user.name}</span>
+                    <span className="text-xs text-muted-foreground normal-case font-normal">{user.email}</span>
+                    <Badge variant="secondary" className="w-fit text-xs mt-1 font-bold uppercase tracking-wide">
                       {ROLE_LABELS[role as keyof typeof ROLE_LABELS] ?? role}
                     </Badge>
                   </div>
@@ -105,7 +126,7 @@ export function Navbar() {
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  className="text-red-600 cursor-pointer"
+                  className="text-destructive cursor-pointer"
                   onClick={() => logout()}
                 >
                   Cerrar sesión
@@ -115,7 +136,7 @@ export function Navbar() {
           ) : (
             <Link
               href="/login"
-              className={cn(buttonVariants({ size: "sm" }), "bg-green-700 hover:bg-green-800")}
+              className="px-4 py-2 text-xs font-bold uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
             >
               Iniciar sesión
             </Link>
@@ -124,23 +145,38 @@ export function Navbar() {
           {/* Mobile menu */}
           <div className="md:hidden">
             <Sheet>
-              <SheetTrigger className="inline-flex items-center justify-center h-9 w-9 rounded-md hover:bg-gray-100">
+              <SheetTrigger className="inline-flex items-center justify-center h-9 w-9 text-foreground/40 hover:text-primary-foreground transition-colors">
                 <Menu className="h-5 w-5" />
               </SheetTrigger>
-              <SheetContent side="right" className="w-64">
-                <div className="flex flex-col gap-4 mt-8">
+              <SheetContent side="right" className="w-64 bg-foreground border-l border-white/10 p-0">
+                <div className="flex flex-col mt-14">
                   {publicLinks.map((link) => (
-                    <Link key={link.href} href={link.href} className="text-lg font-medium">
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={cn(
+                        "px-6 py-4 text-xs font-bold uppercase tracking-widest border-b border-white/10 transition-colors",
+                        pathname === link.href
+                          ? "bg-primary text-primary-foreground"
+                          : "text-foreground/50 hover:text-primary-foreground hover:bg-white/5"
+                      )}
+                    >
                       {link.label}
                     </Link>
                   ))}
                   {hasRole(role, "JUGADOR") && (
-                    <Link href="/asistencia" className="text-lg font-medium">
+                    <Link
+                      href="/asistencia"
+                      className="px-6 py-4 text-xs font-bold uppercase tracking-widest border-b border-white/10 text-foreground/50 hover:text-primary-foreground hover:bg-white/5 transition-colors"
+                    >
                       Asistencia
                     </Link>
                   )}
                   {hasRole(role, "ADMINISTRADOR") && (
-                    <Link href="/admin" className="text-lg font-medium text-green-700">
+                    <Link
+                      href="/admin"
+                      className="px-6 py-4 text-xs font-bold uppercase tracking-widest border-b border-white/10 text-primary hover:text-primary-foreground hover:bg-white/5 transition-colors"
+                    >
                       Panel Admin
                     </Link>
                   )}
