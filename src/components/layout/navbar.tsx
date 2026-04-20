@@ -10,7 +10,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -104,16 +103,14 @@ export function Navbar() {
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-52">
-                <DropdownMenuLabel>
-                  <div className="flex flex-col gap-1">
-                    <span className="font-bold text-sm uppercase tracking-wide">{user.name}</span>
-                    <span className="text-xs text-muted-foreground normal-case font-normal">{user.email}</span>
-                    <Badge variant="secondary" className="w-fit text-xs mt-1 font-bold uppercase tracking-wide">
-                      {ROLE_LABELS[role as keyof typeof ROLE_LABELS] ?? role}
-                    </Badge>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
+                {/* User info header — plain div, not GroupLabel, to avoid @base-ui Group requirement */}
+                <div className="px-2 py-2 border-b border-border mb-1">
+                  <span className="font-bold text-sm uppercase tracking-wide block">{user.name}</span>
+                  <span className="text-xs text-muted-foreground block mt-0.5">{user.email}</span>
+                  <Badge variant="secondary" className="w-fit text-xs mt-1.5 font-bold uppercase tracking-wide">
+                    {ROLE_LABELS[role as keyof typeof ROLE_LABELS] ?? role}
+                  </Badge>
+                </div>
                 {hasRole(role, "JUGADOR") && (
                   <DropdownMenuItem onClick={() => router.push("/perfil")}>
                     Mi Perfil
